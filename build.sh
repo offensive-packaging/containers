@@ -16,4 +16,4 @@ docker run --privileged --rm tonistiigi/binfmt --install all
 docker run --rm --privileged multiarch/qemu-user-static --reset -p yes -c yes
 docker context create build-env || true
 docker buildx create --name multiarch-build --use build-env --driver docker-container --bootstrap --buildkitd-flags '--allow-insecure-entitlement security.insecure' --use
-docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 --allow security.insecure --tag parrotsec/${NAME}:$BRANCH --tag parrotsec/${NAME}:latest --tag registry.parrot.run/${NAME}:$BRANCH --tag registry.parrot.run/${NAME}:latest --push $BUILDPATH
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 --allow security.insecure --tag ghcr.io/${NAME}:$BRANCH --tag ghcr.io/${NAME}:latest --tag registry.parrot.run/${NAME}:$BRANCH --tag registry.parrot.run/${NAME}:latest --push $BUILDPATH
