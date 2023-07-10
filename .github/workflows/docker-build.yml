@@ -1,0 +1,106 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: docker/setup-docker@v1
+
+      - name: Build and deploy core
+        run: /bin/sh ./build.sh ${{ secrets.REGISTRY_USER }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.DOCKER_USER }} ${{ secrets.DOCKER_PASSWORD }} core core ${{ github.ref }}
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: docker/setup-docker@v1
+
+      - name: Build and deploy security
+        run: /bin/sh ./build.sh ${{ secrets.REGISTRY_USER }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.DOCKER_USER }} ${{ secrets.DOCKER_PASSWORD }} security security ${{ github.ref }}
+
+  nmap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: docker/setup-docker@v1
+
+      - name: Build and deploy nmap
+        run: /bin/sh ./build.sh ${{ secrets.REGISTRY_USER }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.DOCKER_USER }} ${{ secrets.DOCKER_PASSWORD }} nmap tools/nmap ${{ github.ref }}
+
+  metasploit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: docker/setup-docker@v1
+
+      - name: Build and deploy metasploit
+        run: /bin/sh ./build.sh ${{ secrets.REGISTRY_USER }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.DOCKER_USER }} ${{ secrets.DOCKER_PASSWORD }} metasploit tools/metasploit ${{ github.ref }}
+
+  beef:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: docker/setup-docker@v1
+
+      - name: Build and deploy beef
+        run: /bin/sh ./build.sh ${{ secrets.REGISTRY_USER }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.DOCKER_USER }} ${{ secrets.DOCKER_PASSWORD }} beef tools/beef ${{ github.ref }}
+
+  sqlmap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: docker/setup-docker@v1
+
+      - name: Build and deploy sqlmap
+        run: /bin/sh ./build.sh ${{ secrets.REGISTRY_USER }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.DOCKER_USER }} ${{ secrets.DOCKER_PASSWORD }} sqlmap tools/sqlmap ${{ github.ref }}
+
+  bettercap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: docker/setup-docker@v1
+
+      - name: Build and deploy bettercap
+        run: /bin/sh ./build.sh ${{ secrets.REGISTRY_USER }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.DOCKER_USER }} ${{ secrets.DOCKER_PASSWORD }} bettercap tools/bettercap ${{ github.ref }}
+
+  set:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: docker/setup-docker@v1
+
+      - name: Build and deploy set
+        run: /bin/sh ./build.sh ${{ secrets.REGISTRY_USER }} ${{ secrets.GITHUB_TOKEN }} ${{ secrets.DOCKER_USER }} ${{ secrets.DOCKER_PASSWORD }} set tools/set ${{ github.ref }}
