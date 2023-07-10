@@ -5,10 +5,6 @@ the official Parrot Security container images.
 Such images can be used with any OCI-compliant container engine,
 like Docker, Podman or various Kubernetes distributions.
 
-[![pipeline status](https://github.com/offensive-packaging/containers/badges/latest/pipeline.svg)](https://github.com/offensive-packaging/containers/-/commits/latest)
-
-[![Latest Release](https://github.com/offensive-packaging/containers/-/badges/release.svg)](https://github.com/offensive-packaging/containers/-/releases)
-
 # Core
 
 The core folder contains the Dockerfile to build the basic Parrot Core image.
