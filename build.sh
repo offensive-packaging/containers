@@ -1,19 +1,66 @@
 #!/bin/bash
 
-REGISTRY_USER=$1
-REGISTRY_PASSWORD=$2
-DOCKER_USER=$3
-DOCKER_PASSWORD=$4
-NAME=$5
-BUILDPATH=$6
-BRANCH=5.3
+function lts_amd64 {
+	ARCH=amd64
+	EDITION=lts
+	echo "Building $EDITION-$ARCH"
+	sudo debootstrap --arch=$ARCH --components=main,contrib,non-free --include=gnupg2,nano --exclude=parrot-core $EDITION $EDITION-$ARCH https://deb.parrot.sh/mirrors/parrot/ > $EDITION-$ARCH.log
+	echo "Customizing $EDITION-$ARCH"
+	sudo rm -rf $EDITION-$ARCH/var/cache/apt/*
+	echo "Importing $EDITION-$ARCH in docker"
+	sudo tar -C $EDITION-$ARCH -c . | docker import - parrotsec/core:base-$EDITION-$ARCH
+	echo "Pushing $EDITION-$ARCH in docker hub"
+	docker push parrotsec/core:base-$EDITION-$ARCH
+	echo "Done $EDITION-$ARCH"
+}
 
-echo $REGISTRY_PASSWORD | docker login -u $REGISTRY_USER --password-stdin registry.parrot.run
-echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin docker.io
-docker pull tonistiigi/binfmt:latest
-docker run --privileged --rm tonistiigi/binfmt --uninstall qemu-*
-docker run --privileged --rm tonistiigi/binfmt --install all
-docker run --rm --privileged multiarch/qemu-user-static --reset -p yes -c yes
-docker context create build-env || true
-docker buildx create --name multiarch-build --use build-env --driver docker-container --bootstrap --buildkitd-flags '--allow-insecure-entitlement security.insecure' --use
-docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 --allow security.insecure --tag ghcr.io/offensive-packaging/${NAME}:$BRANCH --tag ghcr.io/offensive-packaging/${NAME}:latest --tag registry.parrot.run/${NAME}:$BRANCH --tag registry.parrot.run/${NAME}:latest --push $BUILDPATH
+function lts_i386 {
+	ARCH=i386
+	EDITION=lts
+	echo "Building $EDITION-$ARCH"
+	sudo debootstrap --arch=$ARCH --components=main,contrib,non-free --include=gnupg2,nano --exclude=parrot-core $EDITION $EDITION-$ARCH https://deb.parrot.sh/mirrors/parrot/ > $EDITION-$ARCH.log
+	echo "Customizing $EDITION-$ARCH"
+	sudo rm -rf $EDITION-$ARCH/var/cache/apt/*
+	echo "Importing $EDITION-$ARCH in docker"
+	sudo tar -C $EDITION-$ARCH -c . | docker import - parrotsec/core:base-$EDITION-$ARCH
+	echo "Pushing $EDITION-$ARCH in docker hub"
+	docker push parrotsec/core:base-$EDITION-$ARCH
+	echo "Done $EDITION-$ARCH"
+}
+
+function lts_arm64 {
+	ARCH=arm64
+	EDITION=lts
+	echo "Building $EDITION-$ARCH"
+	sudo debootstrap --arch=$ARCH --components=main,contrib,non-free --include=gnupg2,nano --exclude=parrot-core $EDITION $EDITION-$ARCH https://deb.parrot.sh/mirrors/parrot/ > $EDITION-$ARCH.log
+	echo "Customizing $EDITION-$ARCH"
+	sudo rm -rf $EDITION-$ARCH/var/cache/apt/*
+	echo "Importing $EDITION-$ARCH in docker"
+	sudo tar -C $EDITION-$ARCH -c . | docker import - parrotsec/core:base-$EDITION-$ARCH
+	echo "Pushing $EDITION-$ARCH in docker hub"
+	docker push parrotsec/core:base-$EDITION-$ARCH
+	echo "Done $EDITION-$ARCH"
+}
+
+
+function lts_armhf {
+	ARCH=armhf
+	EDITION=lts
+	echo "Building $EDITION-$ARCH"
+	sudo debootstrap --arch=$ARCH --components=main,contrib,non-free --include=gnupg2,nano --exclude=parrot-core $EDITION $EDITION-$ARCH https://deb.parrot.sh/mirrors/parrot/ > $EDITION-$ARCH.log
+	echo "Customizing $EDITION-$ARCH"
+	sudo rm -rf $EDITION-$ARCH/var/cache/apt/*
+	echo "Importing $EDITION-$ARCH in docker"
+	sudo tar -C $EDITION-$ARCH -c . | docker import - parrotsec/core:base-$EDITION-$ARCH
+	echo "Pushing $EDITION-$ARCH in docker hub"
+	docker push parrotsec/core:base-$EDITION-$ARCH
+	echo "Done $EDITION-$ARCH"
+}
+
+#rolling_amd64 &
+#rolling_i386
+lts_amd64 &
+lts_i386
+lts_arm64 &
+lts_armhf
+#tail -f done.log
